@@ -1,17 +1,26 @@
 import React, { useEffect } from 'react'; //rfc to create a functional component
 import axios from 'axios';
+import { Link, useParams } from 'react-router-dom';
 export default function Home() {
 
     const [students,setUsers] = React.useState([]);
 
     useEffect(() => {
        loadUsers();
-    },[]);
+    },[]); // useEffect is a hook that runs after the component mounts
+
+    const{rollNo} =useParams();
 
     const loadUsers = async () => {
         const result = await axios.get("http://localhost:8080/students");
         setUsers(result.data);
     };
+
+    const deleteUser = async (rollNo) => {
+        await axios.delete(`http://localhost:8080/student/delete/${rollNo}`);
+        alert("Student Deleted Successfully");
+        loadUsers();
+    }
 
     return (
         <div className='container'>
@@ -35,9 +44,9 @@ export default function Home() {
                                     <td>{user.percentage}</td>
                                     <td>{user.branch}</td>
                                     <td>
-                                        <button className="btn btn-outline-dark mx-1">View</button>
-                                        <button className="btn btn-outline-primary mx-1">Edit</button>
-                                        <button className="btn btn-outline-danger mx-1">Delete</button>
+                                        <Link className="btn btn-outline-dark mx-1" to={`/student/${user.rollNo}`}>View</Link>
+                                        <Link className="btn btn-outline-primary mx-1" to={`/student/update/${user.rollNo}`}>Edit</Link>
+                                        <button className="btn btn-outline-danger mx-1" onClick={()=>deleteUser(user.rollNo)}>Delete</button>
                                     </td>
                                 </tr>
                             ))
