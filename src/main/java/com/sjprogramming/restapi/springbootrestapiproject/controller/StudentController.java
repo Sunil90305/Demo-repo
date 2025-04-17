@@ -47,6 +47,7 @@ public class StudentController {
 //        return student;
         return repo.findById(id).map(student -> {
             student.setName(newStudent.getName());
+            student.setBranch(newStudent.getBranch());
             student.setPercentage(newStudent.getPercentage());
             Student updatedStudent = repo.save(student);
             return updatedStudent;
